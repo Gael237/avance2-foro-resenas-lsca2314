@@ -1,0 +1,17 @@
+services:
+  moderacion:
+    build: ./app/moderacion
+    ports:
+      - "5001:5001"
+    restart: unless-stopped
+
+  api:
+    build: ./app/api
+    ports:
+      - "5000:5000"
+    environment:
+      - DATABASE_URL=${DATABASE_URL:-sqlite:///foro.db}
+      - MODERACION_URL=http://moderacion:5001
+    depends_on:
+      - moderacion
+    restart: unless-stopped
