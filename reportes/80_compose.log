@@ -1,0 +1,181 @@
+#0 building with "default" instance using docker driver
+
+#1 [moderacion internal] load build definition from Dockerfile
+#1 transferring dockerfile: 402B done
+#1 DONE 0.0s
+
+#2 [moderacion internal] load metadata for docker.io/library/python:3.12-slim
+#2 DONE 0.0s
+
+#3 [moderacion internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [moderacion 1/6] FROM docker.io/library/python:3.12-slim
+#4 DONE 0.0s
+
+#5 [moderacion internal] load build context
+#5 transferring context: 226B done
+#5 DONE 0.0s
+
+#6 [moderacion 2/6] WORKDIR /app
+#6 CACHED
+
+#7 [moderacion 3/6] COPY requirements.txt .
+#7 DONE 0.1s
+
+#8 [moderacion 4/6] RUN pip install --no-cache-dir -r requirements.txt
+#8 1.945 Collecting Flask==3.1.3 (from -r requirements.txt (line 1))
+#8 1.969   Downloading flask-3.1.3-py3-none-any.whl.metadata (3.2 kB)
+#8 1.992 Collecting Werkzeug==3.1.6 (from -r requirements.txt (line 2))
+#8 1.998   Downloading werkzeug-3.1.6-py3-none-any.whl.metadata (4.0 kB)
+#8 2.008 Collecting blinker>=1.9.0 (from Flask==3.1.3->-r requirements.txt (line 1))
+#8 2.014   Downloading blinker-1.9.0-py3-none-any.whl.metadata (1.6 kB)
+#8 2.032 Collecting click>=8.1.3 (from Flask==3.1.3->-r requirements.txt (line 1))
+#8 2.036   Downloading click-8.5.0-py3-none-any.whl.metadata (2.6 kB)
+#8 2.045 Collecting itsdangerous>=2.2.0 (from Flask==3.1.3->-r requirements.txt (line 1))
+#8 2.050   Downloading itsdangerous-2.2.0-py3-none-any.whl.metadata (1.9 kB)
+#8 2.064 Collecting jinja2>=3.1.2 (from Flask==3.1.3->-r requirements.txt (line 1))
+#8 2.068   Downloading jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+#8 2.115 Collecting markupsafe>=2.1.1 (from Flask==3.1.3->-r requirements.txt (line 1))
+#8 2.120   Downloading markupsafe-3.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
+#8 2.139 Downloading flask-3.1.3-py3-none-any.whl (103 kB)
+#8 2.150 Downloading werkzeug-3.1.6-py3-none-any.whl (225 kB)
+#8 2.159 Downloading blinker-1.9.0-py3-none-any.whl (8.5 kB)
+#8 2.165 Downloading click-8.5.0-py3-none-any.whl (125 kB)
+#8 2.171 Downloading itsdangerous-2.2.0-py3-none-any.whl (16 kB)
+#8 2.177 Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
+#8 2.182 Downloading markupsafe-3.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
+#8 2.203 Installing collected packages: markupsafe, itsdangerous, click, blinker, Werkzeug, jinja2, Flask
+#8 2.680 Successfully installed Flask-3.1.3 Werkzeug-3.1.6 blinker-1.9.0 click-8.5.0 itsdangerous-2.2.0 jinja2-3.1.6 markupsafe-3.0.3
+#8 2.681 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+#8 2.750 
+#8 2.750 [notice] A new release of pip is available: 25.0.1 -> 26.2.1
+#8 2.750 [notice] To update, run: pip install --upgrade pip
+#8 DONE 2.9s
+
+#9 [moderacion 5/6] COPY moderador.py .
+#9 DONE 0.1s
+
+#10 [moderacion 6/6] RUN useradd --create-home --uid 10001 appuser
+#10 DONE 0.4s
+
+#11 [moderacion] exporting to image
+#11 exporting layers
+#11 exporting layers 0.2s done
+#11 writing image sha256:a5b74ba30d816074d6e681eaa32c19e048bbb02474e35ae476f700047e2f40c2 done
+#11 naming to docker.io/library/avance2-foro-resenas-lsca2314-moderacion done
+#11 DONE 0.2s
+
+#12 [moderacion] resolving provenance for metadata file
+#12 DONE 0.0s
+
+#13 [api internal] load build definition from Dockerfile
+#13 transferring dockerfile: 429B done
+#13 DONE 0.0s
+
+#2 [api internal] load metadata for docker.io/library/python:3.12-slim
+#2 DONE 0.0s
+
+#14 [api internal] load .dockerignore
+#14 transferring context: 2B done
+#14 DONE 0.0s
+
+#4 [api 1/6] FROM docker.io/library/python:3.12-slim
+#4 DONE 0.0s
+
+#15 [api internal] load build context
+#15 transferring context: 280B done
+#15 DONE 0.0s
+
+#6 [api 2/6] WORKDIR /app
+#6 CACHED
+
+#16 [api 3/6] COPY requirements.txt .
+#16 DONE 0.0s
+
+#17 [api 4/6] RUN pip install --no-cache-dir -r requirements.txt
+#17 1.923 Collecting Flask==3.1.3 (from -r requirements.txt (line 1))
+#17 1.944   Downloading flask-3.1.3-py3-none-any.whl.metadata (3.2 kB)
+#17 2.281 Collecting SQLAlchemy==2.0.36 (from -r requirements.txt (line 2))
+#17 2.285   Downloading SQLAlchemy-2.0.36-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (9.7 kB)
+#17 2.318 Collecting requests==2.33.0 (from -r requirements.txt (line 3))
+#17 2.322   Downloading requests-2.33.0-py3-none-any.whl.metadata (5.1 kB)
+#17 2.346 Collecting Werkzeug==3.1.6 (from -r requirements.txt (line 4))
+#17 2.350   Downloading werkzeug-3.1.6-py3-none-any.whl.metadata (4.0 kB)
+#17 2.412 Collecting psycopg2-binary==2.9.10 (from -r requirements.txt (line 5))
+#17 2.415   Downloading psycopg2_binary-2.9.10-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB)
+#17 2.424 Collecting blinker>=1.9.0 (from Flask==3.1.3->-r requirements.txt (line 1))
+#17 2.428   Downloading blinker-1.9.0-py3-none-any.whl.metadata (1.6 kB)
+#17 2.445 Collecting click>=8.1.3 (from Flask==3.1.3->-r requirements.txt (line 1))
+#17 2.448   Downloading click-8.5.0-py3-none-any.whl.metadata (2.6 kB)
+#17 2.458 Collecting itsdangerous>=2.2.0 (from Flask==3.1.3->-r requirements.txt (line 1))
+#17 2.462   Downloading itsdangerous-2.2.0-py3-none-any.whl.metadata (1.9 kB)
+#17 2.476 Collecting jinja2>=3.1.2 (from Flask==3.1.3->-r requirements.txt (line 1))
+#17 2.480   Downloading jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+#17 2.528 Collecting markupsafe>=2.1.1 (from Flask==3.1.3->-r requirements.txt (line 1))
+#17 2.532   Downloading markupsafe-3.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
+#17 2.557 Collecting typing-extensions>=4.6.0 (from SQLAlchemy==2.0.36->-r requirements.txt (line 2))
+#17 2.561   Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+#17 2.707 Collecting greenlet!=0.4.17 (from SQLAlchemy==2.0.36->-r requirements.txt (line 2))
+#17 2.711   Downloading greenlet-3.5.6-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (3.8 kB)
+#17 2.832 Collecting charset_normalizer<4,>=2 (from requests==2.33.0->-r requirements.txt (line 3))
+#17 2.836   Downloading charset_normalizer-3.5.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (45 kB)
+#17 2.859 Collecting idna<4,>=2.5 (from requests==2.33.0->-r requirements.txt (line 3))
+#17 2.861   Downloading idna-3.19-py3-none-any.whl.metadata (9.2 kB)
+#17 2.892 Collecting urllib3<3,>=1.26 (from requests==2.33.0->-r requirements.txt (line 3))
+#17 2.896   Downloading urllib3-2.8.0-py3-none-any.whl.metadata (7.4 kB)
+#17 2.915 Collecting certifi>=2023.5.7 (from requests==2.33.0->-r requirements.txt (line 3))
+#17 2.919   Downloading certifi-2026.7.22-py3-none-any.whl.metadata (2.5 kB)
+#17 2.936 Downloading flask-3.1.3-py3-none-any.whl (103 kB)
+#17 2.942 Downloading SQLAlchemy-2.0.36-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.2 MB)
+#17 2.956    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.2/3.2 MB 297.2 MB/s eta 0:00:00
+#17 2.960 Downloading requests-2.33.0-py3-none-any.whl (65 kB)
+#17 2.963 Downloading werkzeug-3.1.6-py3-none-any.whl (225 kB)
+#17 2.968 Downloading psycopg2_binary-2.9.10-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.0 MB)
+#17 2.978    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.0/3.0 MB 439.4 MB/s eta 0:00:00
+#17 2.981 Downloading blinker-1.9.0-py3-none-any.whl (8.5 kB)
+#17 2.985 Downloading certifi-2026.7.22-py3-none-any.whl (136 kB)
+#17 2.989 Downloading charset_normalizer-3.5.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (248 kB)
+#17 2.992 Downloading click-8.5.0-py3-none-any.whl (125 kB)
+#17 2.996 Downloading greenlet-3.5.6-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (621 kB)
+#17 3.000    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 621.4/621.4 kB 725.1 MB/s eta 0:00:00
+#17 3.004 Downloading idna-3.19-py3-none-any.whl (68 kB)
+#17 3.009 Downloading itsdangerous-2.2.0-py3-none-any.whl (16 kB)
+#17 3.013 Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
+#17 3.018 Downloading markupsafe-3.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
+#17 3.021 Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+#17 3.026 Downloading urllib3-2.8.0-py3-none-any.whl (135 kB)
+#17 3.101 Installing collected packages: urllib3, typing-extensions, psycopg2-binary, markupsafe, itsdangerous, idna, greenlet, click, charset_normalizer, certifi, blinker, Werkzeug, SQLAlchemy, requests, jinja2, Flask
+#17 5.509 Successfully installed Flask-3.1.3 SQLAlchemy-2.0.36 Werkzeug-3.1.6 blinker-1.9.0 certifi-2026.7.22 charset_normalizer-3.5.1 click-8.5.0 greenlet-3.5.6 idna-3.19 itsdangerous-2.2.0 jinja2-3.1.6 markupsafe-3.0.3 psycopg2-binary-2.9.10 requests-2.33.0 typing-extensions-4.16.0 urllib3-2.8.0
+#17 5.510 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+#17 5.582 
+#17 5.582 [notice] A new release of pip is available: 25.0.1 -> 26.2.1
+#17 5.582 [notice] To update, run: pip install --upgrade pip
+#17 DONE 5.9s
+
+#18 [api 5/6] COPY api.py .
+#18 DONE 0.0s
+
+#19 [api 6/6] RUN useradd --create-home --uid 10001 appuser     && chown -R appuser:appuser /app
+#19 DONE 0.4s
+
+#20 [api] exporting to image
+#20 exporting layers
+#20 exporting layers 0.4s done
+#20 writing image sha256:d9d0a0a625aa6df53e2ce6350dcdaf0fc9afe4165c988fa02774d79442812636 done
+#20 naming to docker.io/library/avance2-foro-resenas-lsca2314-api done
+#20 DONE 0.4s
+
+#21 [api] resolving provenance for metadata file
+#21 DONE 0.0s
+ Network avance2-foro-resenas-lsca2314_default  Creating
+ Network avance2-foro-resenas-lsca2314_default  Created
+ Container avance2-foro-resenas-lsca2314-moderacion-1  Creating
+ Container avance2-foro-resenas-lsca2314-moderacion-1  Created
+ Container avance2-foro-resenas-lsca2314-api-1  Creating
+ Container avance2-foro-resenas-lsca2314-api-1  Created
+ Container avance2-foro-resenas-lsca2314-moderacion-1  Starting
+ Container avance2-foro-resenas-lsca2314-moderacion-1  Started
+ Container avance2-foro-resenas-lsca2314-api-1  Starting
+ Container avance2-foro-resenas-lsca2314-api-1  Started

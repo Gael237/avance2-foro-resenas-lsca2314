@@ -1,0 +1,6 @@
+Found 3 known vulnerabilities in 2 packages
+Name     Version ID              Fix Versions
+-------- ------- --------------- ------------
+werkzeug 3.1.4   PYSEC-2026-2044 3.1.5
+werkzeug 3.1.4   PYSEC-2026-2320 3.1.6
+click    8.1.8   PYSEC-2026-2132 8.3.3

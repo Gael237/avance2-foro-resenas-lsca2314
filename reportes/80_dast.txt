@@ -1,0 +1,8 @@
+  [PASA] API en linea: /salud -> 200
+  [PASA] Moderacion en linea: /salud -> 200
+  [PASA] Registro funciona: POST /registro -> 201
+  [PASA] Login funciona: POST /login -> 200
+  [PASA] Login rechaza password incorrecta: POST /login (mala) -> 401
+  [PASA] Hilos exige autenticacion: POST /hilos sin token -> 401
+
+  Pruebas fallidas: 0

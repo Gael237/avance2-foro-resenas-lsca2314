@@ -34,7 +34,7 @@ resource "aws_security_group" "foro_db_sg" {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["172.31.0.0/16"]
   }
 }
 
@@ -48,7 +48,7 @@ resource "aws_db_instance" "foro_db" {
   username                = var.db_usuario
   password                = var.db_password
   vpc_security_group_ids  = [aws_security_group.foro_db_sg.id]
-  publicly_accessible     = true
+  publicly_accessible     = false
   storage_encrypted       = true
   skip_final_snapshot     = true
   backup_retention_period = 1
