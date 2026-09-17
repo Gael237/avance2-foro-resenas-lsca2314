@@ -1,6 +1,6 @@
-2026-09-17T01:55:34Z	INFO	[misconfig] Misconfiguration scanning is enabled
-2026-09-17T01:55:34Z	INFO	[checks-client] Using existing checks from cache	path="/home/ec2-user/.cache/trivy/policy/content"
-2026-09-17T01:55:36Z	INFO	Detected config files	num=1
+2026-09-17T03:12:37Z	INFO	[misconfig] Misconfiguration scanning is enabled
+2026-09-17T03:12:37Z	INFO	[checks-client] Using existing checks from cache	path="/home/ec2-user/.cache/trivy/policy/content"
+2026-09-17T03:12:38Z	INFO	Detected config files	num=1
 
 Report Summary
 

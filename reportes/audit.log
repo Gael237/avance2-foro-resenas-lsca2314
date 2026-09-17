@@ -16,3 +16,30 @@
 2026-09-17T01:56:13Z etapa="70 SBOM (evidencia)" estado=PASA bloquea=no
 2026-09-17T01:56:13Z etapa="80 Pruebas dinamicas (DAST)" estado=PASA bloquea=si
 2026-09-17T01:56:13Z resultado=PERMITIDO
+2026-09-17T02:58:02Z etapa="10 Secretos en el codigo" estado=PASA bloquea=si
+2026-09-17T02:58:02Z etapa="20 Secretos en el historial" estado=PASA bloquea=no
+2026-09-17T02:58:02Z etapa="30 Dependencias (SCA)" estado=PASA bloquea=si
+2026-09-17T02:58:02Z etapa="40 Codigo propio (SAST)" estado=PASA bloquea=si
+2026-09-17T02:58:02Z etapa="50 Infraestructura (IaC)" estado=PASA bloquea=si
+2026-09-17T02:58:02Z etapa="60 Imagenes de contenedor" estado=PASA bloquea=si
+2026-09-17T02:58:02Z etapa="70 SBOM (evidencia)" estado=PASA bloquea=no
+2026-09-17T02:58:02Z etapa="80 Pruebas dinamicas (DAST)" estado=PASA bloquea=si
+2026-09-17T02:58:02Z resultado=PERMITIDO
+2026-09-17T03:06:29Z etapa="10 Secretos en el codigo" estado=PASA bloquea=si
+2026-09-17T03:06:29Z etapa="20 Secretos en el historial" estado=PASA bloquea=no
+2026-09-17T03:06:29Z etapa="30 Dependencias (SCA)" estado=PASA bloquea=si
+2026-09-17T03:06:29Z etapa="40 Codigo propio (SAST)" estado=PASA bloquea=si
+2026-09-17T03:06:29Z etapa="50 Infraestructura (IaC)" estado=PASA bloquea=si
+2026-09-17T03:06:29Z etapa="60 Imagenes de contenedor" estado=PASA bloquea=si
+2026-09-17T03:06:29Z etapa="70 SBOM (evidencia)" estado=PASA bloquea=no
+2026-09-17T03:06:29Z etapa="80 Pruebas dinamicas (DAST)" estado=PASA bloquea=si
+2026-09-17T03:06:29Z resultado=PERMITIDO
+2026-09-17T03:13:02Z etapa="10 Secretos en el codigo" estado=PASA bloquea=si
+2026-09-17T03:13:02Z etapa="20 Secretos en el historial" estado=PASA bloquea=no
+2026-09-17T03:13:02Z etapa="30 Dependencias (SCA)" estado=PASA bloquea=si
+2026-09-17T03:13:02Z etapa="40 Codigo propio (SAST)" estado=PASA bloquea=si
+2026-09-17T03:13:02Z etapa="50 Infraestructura (IaC)" estado=PASA bloquea=si
+2026-09-17T03:13:02Z etapa="60 Imagenes de contenedor" estado=PASA bloquea=si
+2026-09-17T03:13:02Z etapa="70 SBOM (evidencia)" estado=PASA bloquea=no
+2026-09-17T03:13:02Z etapa="80 Pruebas dinamicas (DAST)" estado=PASA bloquea=si
+2026-09-17T03:13:02Z resultado=PERMITIDO

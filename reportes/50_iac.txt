@@ -1,8 +1,8 @@
-2026-09-17T01:55:26Z	INFO	[misconfig] Misconfiguration scanning is enabled
-2026-09-17T01:55:26Z	INFO	[checks-client] Using existing checks from cache	path="/home/ec2-user/.cache/trivy/policy/content"
-2026-09-17T01:55:27Z	INFO	[terraform scanner] Scanning root module	file_path="."
-2026-09-17T01:55:27Z	WARN	[terraform parser] Variable values were not found in the environment or variable files. Evaluating may not work correctly.	module="root" variables="db_password, db_usuario, ip_permitida"
-2026-09-17T01:55:27Z	INFO	Detected config files	num=2
+2026-09-17T03:12:28Z	INFO	[misconfig] Misconfiguration scanning is enabled
+2026-09-17T03:12:28Z	INFO	[checks-client] Using existing checks from cache	path="/home/ec2-user/.cache/trivy/policy/content"
+2026-09-17T03:12:30Z	INFO	[terraform scanner] Scanning root module	file_path="."
+2026-09-17T03:12:30Z	WARN	[terraform parser] Variable values were not found in the environment or variable files. Evaluating may not work correctly.	module="root" variables="db_password, db_usuario, ip_permitida"
+2026-09-17T03:12:30Z	INFO	Detected config files	num=2
 
 Report Summary
 

@@ -1,0 +1,59 @@
+pipeline/pipeline_local.sh
+==================================================
+ Pipeline - Foro y Resenas de Productos
+==================================================
+
+== Etapa 10: secretos en el arbol de trabajo (gitleaks dir) ==
+  Resultado: FALLA (bloquea)
+
+== Etapa 20: secretos en el HISTORIAL completo (gitleaks git) ==
+  Hallazgos en el historial: 0
+0
+
+== Etapa 30: dependencias (pip-audit sobre api/ y moderacion/) ==
+  api/requirements.txt:
+    Found 6 known vulnerabilities in 4 packages
+  moderacion/requirements.txt:
+    Found 3 known vulnerabilities in 2 packages
+  Resultado: FALLA (bloquea)
+
+== Etapa 40: SAST (semgrep + bandit) sobre app/ ==
+  semgrep ERROR: 0  |  bandit HIGH: 0
+  Resultado: PASA
+
+== Etapa 50: infraestructura (trivy config sobre infra/) ==
+  HIGH/CRITICAL: 2
+  Resultado: FALLA (bloquea)
+
+== Etapa 60: imagenes de contenedor (trivy config) ==
+  api: 0 HIGH/CRITICAL  |  moderacion: 0 HIGH/CRITICAL
+  Resultado: PASA
+
+== Etapa 70: SBOM (syft) ==
+  Librerias inventariadas: 7
+  Resultado: PASA (artefacto generado)
+
+== Etapa 80: DAST sobre la app en ejecucion ==
+  [PASA] API en linea: /salud -> 200
+  [PASA] Moderacion en linea: /salud -> 200
+  [PASA] Registro funciona: POST /registro -> 201
+  [PASA] Login funciona: POST /login -> 200
+  [PASA] Login rechaza password incorrecta: POST /login (mala) -> 401
+  [PASA] Hilos exige autenticacion: POST /hilos sin token -> 401
+
+  Pruebas fallidas: 0
+  Resultado: PASA
+
+==================================================
+ Etapa 90: puerta de control
+==================================================
+  10 Secretos en el codigo            FALLA
+  20 Secretos en el historial         PASA
+  30 Dependencias (SCA)               FALLA
+  40 Codigo propio (SAST)             PASA
+  50 Infraestructura (IaC)            FALLA
+  60 Imagenes de contenedor           PASA
+  70 SBOM (evidencia)                 PASA
+  80 Pruebas dinamicas (DAST)         PASA
+
+DESPLIEGUE BLOQUEADO (3 control(es) bloqueante(s) en rojo)

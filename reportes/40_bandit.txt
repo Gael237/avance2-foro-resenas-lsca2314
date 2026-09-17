@@ -3,7 +3,7 @@
 [main]	INFO	cli include tests: None
 [main]	INFO	cli exclude tests: None
 [main]	INFO	running on Python 3.9.25
-Run started:2026-09-17 01:55:25.998795
+Run started:2026-09-17 03:12:28.298756
 
 Test results:
 >> Issue: [B104:hardcoded_bind_all_interfaces] Possible binding to all interfaces.

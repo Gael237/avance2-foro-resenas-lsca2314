@@ -1,0 +1,13 @@
+==================================================
+ Etapa 90: puerta de control
+==================================================
+  10 Secretos en el codigo            PASA
+  20 Secretos en el historial         PASA
+  30 Dependencias (SCA)               PASA
+  40 Codigo propio (SAST)             PASA
+  50 Infraestructura (IaC)            PASA
+  60 Imagenes de contenedor           PASA
+  70 SBOM (evidencia)                 PASA
+  80 Pruebas dinamicas (DAST)         PASA
+
+DESPLIEGUE PERMITIDO
