@@ -6,4 +6,5 @@ venv/
 bin/
 .terraform/
 *.tfstate
-*.tfstate.backup
+*.tfstate.*
+*.tfvars
