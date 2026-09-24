@@ -3,6 +3,9 @@ from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 
+from vista_previa_resena import vista_previa_bp
+app.register_blueprint(vista_previa_bp)
+
 PALABRAS_PROHIBIDAS = {"estafa", "fraude", "basura", "spam"}
 LONGITUD_MINIMA = 5
 
