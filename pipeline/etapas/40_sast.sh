@@ -24,6 +24,27 @@ d=json.load(open('reportes/40_semgrep.json'))
 print(len([r for r in d.get('results',[]) if r['extra']['severity']=='ERROR']))
 " 2>/dev/null || echo 99)
 
+# Ademas del umbral por severidad, se bloquea por CONTENIDO del mensaje:
+# ciertas categorias de falla (inyeccion, XSS, deserializacion insegura,
+# SSRF) son criticas independientemente de la severidad que la regla de
+# semgrep les haya asignado. Esto se agrego tras la Entrega Final, cuando
+# el parche de vista previa introdujo un XSS que semgrep marco como
+# WARNING y por lo tanto no bloqueaba el pipeline.
+PALABRAS_CLAVE_RIESGO="injection|xss|cross-site|deserialization|ssrf|command execution|remote code"
+HALLAZGOS_RIESGO=$(python3 -c "
+import json, re
+d=json.load(open('reportes/40_semgrep.json'))
+patron = re.compile(r'$PALABRAS_CLAVE_RIESGO', re.IGNORECASE)
+n = 0
+for r in d.get('results', []):
+    mensaje = r.get('extra', {}).get('message', '')
+    if patron.search(mensaje):
+        n += 1
+print(n)
+" 2>/dev/null || echo 99)
+
+echo "  Hallazgos de riesgo por palabra clave (independiente de severidad): $HALLAZGOS_RIESGO"
+
 ALTOS=$(python3 -c "
 import json
 d=json.load(open('reportes/40_bandit.json'))
@@ -31,7 +52,7 @@ print(len([r for r in d.get('results',[]) if r['issue_severity']=='HIGH']))
 " 2>/dev/null || echo 99)
 
 echo "  semgrep ERROR: $ERRORES  |  bandit HIGH: $ALTOS"
-if [ "$ERRORES" -eq 0 ] && [ "$ALTOS" -eq 0 ]; then
+if [ "$ERRORES" -eq 0 ] && [ "$ALTOS" -eq 0 ] && [ "$HALLAZGOS_RIESGO" -eq 0 ]; then
   echo "0" > reportes/.40_exit; echo "  Resultado: PASA"; exit 0
 else
   echo "1" > reportes/.40_exit; echo "  Resultado: FALLA (bloquea)"; exit 1
