@@ -36,3 +36,18 @@ la falla de seguridad que se pide encontrar o un tropiezo técnico aparte.
 - **Lección:** declarar una variable "segura" no basta si el resto del
   código no la usa de verdad. Vale la pena probar manualmente el resultado
   real, no solo confiar en que el cambio "se ve correcto" al leerlo.
+
+## Incidente 3: `nosemgrep` no funcionó en el primer intento
+
+- **Qué pasó:** tras remediar el XSS, semgrep seguía marcando el mismo
+  hallazgo de `render-template-string` como falso positivo justificado,
+  aunque se había agregado un comentario `# nosemgrep` en la línea anterior
+  a la del hallazgo.
+- **Cómo se diagnosticó:** se confirmó revisando la documentación de
+  semgrep que el comentario `# nosemgrep` debe ir en la MISMA línea donde
+  se reporta el hallazgo, no en una línea de comentario separada arriba.
+- **Cómo se resolvió:** se movió `# nosemgrep: <regla>` al final de la
+  línea `return render_template_string(  # nosemgrep: ...`, dejando el
+  comentario explicativo largo en las líneas de arriba (para que un
+  lector humano vea la justificación) y el marcador técnico exacto en la
+  línea que semgrep evalúa.

@@ -41,6 +41,11 @@ def vista_previa_resena(resena_id):
     contenido_original = request.form.get("contenido", "")
     contenido_formateado = formatear_texto_enriquecido(contenido_original)
 
-    return render_template_string(
+    # Falso positivo justificado: PLANTILLA es una cadena FIJA definida en este
+    # archivo, nunca se construye con datos del usuario (no hay riesgo de SSTI
+    # real). El unico dato variable que se inserta (contenido_formateado) ya
+    # se escapa con markupsafe.escape() en formatear_texto_enriquecido() antes
+    # de llegar aqui (ver remediacion del XSS, CWE-79, en docs/clasificacion_hallazgo.md).
+    return render_template_string( # nosemgrep: python.flask.security.audit.render-template-string.render-template-string
         PLANTILLA, resena_id=resena_id, contenido_formateado=contenido_formateado
     )
