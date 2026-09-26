@@ -1,6 +1,6 @@
 {
   "errors": [],
-  "generated_at": "2026-09-17T03:12:28Z",
+  "generated_at": "2026-09-26T19:10:31Z",
   "metrics": {
     "_totals": {
       "CONFIDENCE.HIGH": 0,
@@ -11,7 +11,7 @@
       "SEVERITY.LOW": 0,
       "SEVERITY.MEDIUM": 2,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 178,
+      "loc": 221,
       "nosec": 0,
       "skipped_tests": 0
     },
@@ -24,7 +24,7 @@
       "SEVERITY.LOW": 0,
       "SEVERITY.MEDIUM": 1,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 148,
+      "loc": 151,
       "nosec": 0,
       "skipped_tests": 0
     },
@@ -37,14 +37,27 @@
       "SEVERITY.LOW": 0,
       "SEVERITY.MEDIUM": 1,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 30,
+      "loc": 32,
+      "nosec": 0,
+      "skipped_tests": 0
+    },
+    "app/moderacion/vista_previa_resena.py": {
+      "CONFIDENCE.HIGH": 0,
+      "CONFIDENCE.LOW": 0,
+      "CONFIDENCE.MEDIUM": 0,
+      "CONFIDENCE.UNDEFINED": 0,
+      "SEVERITY.HIGH": 0,
+      "SEVERITY.LOW": 0,
+      "SEVERITY.MEDIUM": 0,
+      "SEVERITY.UNDEFINED": 0,
+      "loc": 38,
       "nosec": 0,
       "skipped_tests": 0
     }
   },
   "results": [
     {
-      "code": "192 if __name__ == \"__main__\":\n193     app.run(host=\"0.0.0.0\", port=5000)\n",
+      "code": "196 if __name__ == \"__main__\":\n197     app.run(host=\"0.0.0.0\", port=5000)\n",
       "col_offset": 17,
       "end_col_offset": 26,
       "filename": "app/api/api.py",
@@ -55,16 +68,16 @@
       },
       "issue_severity": "MEDIUM",
       "issue_text": "Possible binding to all interfaces.",
-      "line_number": 193,
+      "line_number": 197,
       "line_range": [
-        193
+        197
       ],
       "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b104_hardcoded_bind_all_interfaces.html",
       "test_id": "B104",
       "test_name": "hardcoded_bind_all_interfaces"
     },
     {
-      "code": "46 if __name__ == \"__main__\":\n47     app.run(host=\"0.0.0.0\", port=5001)\n",
+      "code": "49 if __name__ == \"__main__\":\n50     app.run(host=\"0.0.0.0\", port=5001)\n",
       "col_offset": 17,
       "end_col_offset": 26,
       "filename": "app/moderacion/moderador.py",
@@ -75,9 +88,9 @@
       },
       "issue_severity": "MEDIUM",
       "issue_text": "Possible binding to all interfaces.",
-      "line_number": 47,
+      "line_number": 50,
       "line_range": [
-        47
+        50
       ],
       "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b104_hardcoded_bind_all_interfaces.html",
       "test_id": "B104",

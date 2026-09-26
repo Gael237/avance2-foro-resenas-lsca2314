@@ -1,7 +1,7 @@
 #0 building with "default" instance using docker driver
 
 #1 [moderacion internal] load build definition from Dockerfile
-#1 transferring dockerfile: 402B done
+#1 transferring dockerfile: 432B done
 #1 DONE 0.0s
 
 #2 [moderacion internal] load metadata for docker.io/library/python:3.12-slim
@@ -11,78 +11,83 @@
 #3 transferring context: 2B done
 #3 DONE 0.0s
 
-#4 [moderacion 1/6] FROM docker.io/library/python:3.12-slim
+#4 [moderacion 1/7] FROM docker.io/library/python:3.12-slim
 #4 DONE 0.0s
 
 #5 [moderacion internal] load build context
-#5 transferring context: 187B done
+#5 transferring context: 288B done
 #5 DONE 0.0s
 
-#6 [moderacion 3/6] COPY requirements.txt .
+#6 [moderacion 4/7] RUN pip install --no-cache-dir -r requirements.txt
 #6 CACHED
 
-#7 [moderacion 5/6] COPY moderador.py .
+#7 [moderacion 5/7] COPY moderador.py .
 #7 CACHED
 
-#8 [moderacion 2/6] WORKDIR /app
+#8 [moderacion 6/7] COPY vista_previa_resena.py .
 #8 CACHED
 
-#9 [moderacion 4/6] RUN pip install --no-cache-dir -r requirements.txt
+#9 [moderacion 2/7] WORKDIR /app
 #9 CACHED
 
-#10 [moderacion 6/6] RUN useradd --create-home --uid 10001 appuser
+#10 [moderacion 3/7] COPY requirements.txt .
 #10 CACHED
 
-#11 [moderacion] exporting to image
-#11 exporting layers done
-#11 writing image sha256:a5b74ba30d816074d6e681eaa32c19e048bbb02474e35ae476f700047e2f40c2 done
-#11 naming to docker.io/library/avance2-foro-resenas-lsca2314-moderacion done
-#11 DONE 0.0s
+#11 [moderacion 7/7] RUN useradd --create-home --uid 10001 appuser
+#11 CACHED
 
-#12 [moderacion] resolving provenance for metadata file
+#12 [moderacion] exporting to image
+#12 exporting layers done
+#12 writing image sha256:408798fb0b4a3ac54d10450d4e7cfdea763aa6719b95703a9c827ea8c155a900 done
+#12 naming to docker.io/library/avance2-foro-resenas-lsca2314-moderacion done
 #12 DONE 0.0s
 
-#13 [api internal] load build definition from Dockerfile
-#13 transferring dockerfile: 429B done
+#13 [moderacion] resolving provenance for metadata file
 #13 DONE 0.0s
+
+#14 [api internal] load build definition from Dockerfile
+#14 transferring dockerfile: 452B done
+#14 DONE 0.0s
 
 #2 [api internal] load metadata for docker.io/library/python:3.12-slim
 #2 DONE 0.0s
 
-#14 [api internal] load .dockerignore
-#14 transferring context: 2B done
-#14 DONE 0.0s
-
-#4 [api 1/6] FROM docker.io/library/python:3.12-slim
-#4 DONE 0.0s
-
-#15 [api internal] load build context
-#15 transferring context: 181B done
+#15 [api internal] load .dockerignore
+#15 transferring context: 2B done
 #15 DONE 0.0s
 
-#8 [api 2/6] WORKDIR /app
-#8 CACHED
+#4 [api 1/7] FROM docker.io/library/python:3.12-slim
+#4 DONE 0.0s
 
-#16 [api 5/6] COPY api.py .
-#16 CACHED
+#16 [api internal] load build context
+#16 transferring context: 362B done
+#16 DONE 0.0s
 
-#17 [api 3/6] COPY requirements.txt .
+#17 [api 5/7] COPY api.py .
 #17 CACHED
 
-#18 [api 4/6] RUN pip install --no-cache-dir -r requirements.txt
+#18 [api 6/7] COPY static/ ./static/
 #18 CACHED
 
-#19 [api 6/6] RUN useradd --create-home --uid 10001 appuser     && chown -R appuser:appuser /app
+#19 [api 4/7] RUN pip install --no-cache-dir -r requirements.txt
 #19 CACHED
 
-#20 [api] exporting to image
-#20 exporting layers done
-#20 writing image sha256:d9d0a0a625aa6df53e2ce6350dcdaf0fc9afe4165c988fa02774d79442812636 done
-#20 naming to docker.io/library/avance2-foro-resenas-lsca2314-api
-#20 naming to docker.io/library/avance2-foro-resenas-lsca2314-api done
-#20 DONE 0.0s
+#20 [api 3/7] COPY requirements.txt .
+#20 CACHED
 
-#21 [api] resolving provenance for metadata file
-#21 DONE 0.0s
+#9 [api 2/7] WORKDIR /app
+#9 CACHED
+
+#21 [api 7/7] RUN useradd --create-home --uid 10001 appuser     && chown -R appuser:appuser /app
+#21 CACHED
+
+#22 [api] exporting to image
+#22 exporting layers done
+#22 writing image sha256:73604a077629460c0c789eac59e33291802206f32132ff10ab45a1c80dad6a01 done
+#22 naming to docker.io/library/avance2-foro-resenas-lsca2314-api done
+#22 DONE 0.0s
+
+#23 [api] resolving provenance for metadata file
+#23 DONE 0.0s
  Container avance2-foro-resenas-lsca2314-moderacion-1  Running
  Container avance2-foro-resenas-lsca2314-api-1  Running
