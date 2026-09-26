@@ -8,7 +8,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from sqlalchemy import create_engine, Column, Integer, String, Text, Boolean, ForeignKey
 from sqlalchemy.orm import sessionmaker, declarative_base, relationship
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="static", static_url_path="")
 
 DATABASE_URL = os.environ.get("DATABASE_URL", "sqlite:///foro.db")
 MODERACION_URL = os.environ.get("MODERACION_URL", "http://moderacion:5001")
@@ -57,6 +57,10 @@ def usuario_autenticado():
         return None
     token = auth.split(" ", 1)[1]
     return TOKENS.get(token)
+
+@app.route("/")
+def index():
+    return app.send_static_file("index.html")
 
 
 @app.route("/salud")

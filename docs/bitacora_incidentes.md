@@ -51,3 +51,26 @@ la falla de seguridad que se pide encontrar o un tropiezo técnico aparte.
   comentario explicativo largo en las líneas de arriba (para que un
   lector humano vea la justificación) y el marcador técnico exacto en la
   línea que semgrep evalúa.
+
+## Incidente 4: la interfaz web no cargaba desde el navegador
+
+- **Qué pasó:** al agregar una interfaz web (`app/api/static/index.html`)
+  para grabar los clips de la presentación, la página no cargaba al
+  abrir `http://<IP-publica>:5000/` desde el navegador, aunque `curl
+  http://localhost:5000/` sí funcionaba correctamente dentro de la propia
+  instancia.
+- **Cómo se diagnosticó:** se revisaron las reglas de entrada del security
+  group de la instancia de QA (`sg-08bb0403cd54b7be9`) con
+  `aws ec2 describe-security-groups`, encontrando que solo tenía abiertos
+  los puertos 22, 8000 y 8080 — nunca se había abierto el 5000 ni el 5001,
+  porque hasta ahora la aplicación solo se había probado desde dentro de
+  la misma instancia (`localhost`), nunca desde un navegador externo.
+- **Cómo se resolvió:** se agregaron 2 reglas de entrada nuevas al
+  security group, autorizando tráfico TCP en los puertos 5000 y 5001
+  desde cualquier origen (`0.0.0.0/0`), ya que a diferencia del acceso a
+  RDS (restringido por diseño), esta interfaz está pensada para ser
+  accesible públicamente como cualquier aplicación web de demostración.
+- **Nota de credenciales:** también fue necesario renovar las credenciales
+  de AWS Academy (habían expirado, error `RequestExpired`) antes de poder
+  consultar el security group — recordatorio de que las credenciales
+  temporales duran solo 3-4 horas.

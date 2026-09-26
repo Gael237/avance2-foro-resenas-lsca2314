@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Foro de Reseñas - Sistema de Catálogo Retail</title>
+<style>
+  body { font-family: Arial, sans-serif; max-width: 700px; margin: 40px auto; padding: 0 20px; background: #f5f5f5; }
+  h1 { color: #222; }
+  section { background: white; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+  h2 { margin-top: 0; font-size: 18px; color: #444; }
+  input, textarea { width: 100%; padding: 8px; margin: 6px 0; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+  button { background: #2563eb; color: white; border: none; padding: 10px 16px; border-radius: 4px; cursor: pointer; margin-top: 6px; }
+  button:hover { background: #1d4ed8; }
+  .mensaje { margin-top: 10px; padding: 10px; border-radius: 4px; font-size: 14px; }
+  .ok { background: #dcfce7; color: #166534; }
+  .error { background: #fee2e2; color: #991b1b; }
+  .hilo { border: 1px solid #eee; padding: 10px; margin: 8px 0; border-radius: 4px; }
+  .comentario { background: #f9fafb; padding: 8px; margin: 6px 0; border-radius: 4px; font-size: 14px; }
+  #estado-sesion { font-weight: bold; margin-bottom: 20px; }
+</style>
+</head>
+<body>
+
+<h1>Foro de Reseñas de Productos</h1>
+<div id="estado-sesion">No has iniciado sesión</div>
+
+<section>
+  <h2>1. Registro</h2>
+  <input id="reg-usuario" placeholder="Nombre de usuario">
+  <input id="reg-password" type="password" placeholder="Contraseña">
+  <button onclick="registrar()">Registrarme</button>
+  <div id="reg-mensaje" class="mensaje"></div>
+</section>
+
+<section>
+  <h2>2. Iniciar sesión</h2>
+  <input id="login-usuario" placeholder="Nombre de usuario">
+  <input id="login-password" type="password" placeholder="Contraseña">
+  <button onclick="iniciarSesion()">Iniciar sesión</button>
+  <div id="login-mensaje" class="mensaje"></div>
+</section>
+
+<section>
+  <h2>3. Crear un hilo sobre un producto</h2>
+  <input id="hilo-producto" placeholder="Nombre del producto">
+  <input id="hilo-titulo" placeholder="Título del hilo">
+  <button onclick="crearHilo()">Crear hilo</button>
+  <div id="hilo-mensaje" class="mensaje"></div>
+</section>
+
+<section>
+  <h2>4. Hilos existentes</h2>
+  <button onclick="cargarHilos()">Actualizar lista</button>
+  <div id="lista-hilos"></div>
+</section>
+
+<section>
+  <h2>5. Publicar un comentario</h2>
+  <input id="com-hilo-id" placeholder="ID del hilo" type="number">
+  <textarea id="com-texto" placeholder="Escribe tu comentario"></textarea>
+  <input id="com-calificacion" placeholder="Calificación (1-5)" type="number" min="1" max="5">
+  <button onclick="publicarComentario()">Publicar</button>
+  <div id="com-mensaje" class="mensaje"></div>
+</section>
+
+<section>
+  <h2>6. Ver comentarios de un hilo</h2>
+  <input id="ver-hilo-id" placeholder="ID del hilo" type="number">
+  <button onclick="verComentarios()">Ver comentarios</button>
+  <div id="lista-comentarios"></div>
+</section>
+
+<script>
+let TOKEN = null;
+
+function mostrarMensaje(idElemento, texto, esError) {
+  const el = document.getElementById(idElemento);
+  el.textContent = texto;
+  el.className = "mensaje " + (esError ? "error" : "ok");
+}
+
+async function registrar() {
+  const nombre_usuario = document.getElementById("reg-usuario").value;
+  const password = document.getElementById("reg-password").value;
+  const resp = await fetch("/registro", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({nombre_usuario, password})
+  });
+  const datos = await resp.json();
+  mostrarMensaje("reg-mensaje", resp.ok ? "Cuenta creada: " + datos.creado : (datos.error || "Error"), !resp.ok);
+}
+
+async function iniciarSesion() {
+  const nombre_usuario = document.getElementById("login-usuario").value;
+  const password = document.getElementById("login-password").value;
+  const resp = await fetch("/login", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({nombre_usuario, password})
+  });
+  const datos = await resp.json();
+  if (resp.ok) {
+    TOKEN = datos.token;
+    document.getElementById("estado-sesion").textContent = "Sesión iniciada como: " + nombre_usuario;
+    mostrarMensaje("login-mensaje", "Sesión iniciada correctamente", false);
+  } else {
+    mostrarMensaje("login-mensaje", datos.error || "Error", true);
+  }
+}
+
+async function crearHilo() {
+  if (!TOKEN) { mostrarMensaje("hilo-mensaje", "Primero inicia sesión", true); return; }
+  const producto = document.getElementById("hilo-producto").value;
+  const titulo = document.getElementById("hilo-titulo").value;
+  const resp = await fetch("/hilos", {
+    method: "POST",
+    headers: {"Content-Type": "application/json", "Authorization": "Bearer " + TOKEN},
+    body: JSON.stringify({producto, titulo})
+  });
+  const datos = await resp.json();
+  mostrarMensaje("hilo-mensaje", resp.ok ? "Hilo creado con ID " + datos.id : (datos.error || "Error"), !resp.ok);
+  if (resp.ok) cargarHilos();
+}
+
+async function cargarHilos() {
+  const resp = await fetch("/hilos");
+  const hilos = await resp.json();
+  const contenedor = document.getElementById("lista-hilos");
+  contenedor.innerHTML = hilos.map(h =>
+    `<div class="hilo"><b>#${h.id}</b> - ${h.producto}: ${h.titulo}</div>`
+  ).join("") || "<p>No hay hilos todavía.</p>";
+}
+
+async function publicarComentario() {
+  if (!TOKEN) { mostrarMensaje("com-mensaje", "Primero inicia sesión", true); return; }
+  const hiloId = document.getElementById("com-hilo-id").value;
+  const texto = document.getElementById("com-texto").value;
+  const calificacion = parseInt(document.getElementById("com-calificacion").value) || 0;
+  const resp = await fetch(`/hilos/${hiloId}/comentarios`, {
+    method: "POST",
+    headers: {"Content-Type": "application/json", "Authorization": "Bearer " + TOKEN},
+    body: JSON.stringify({texto, calificacion})
+  });
+  const datos = await resp.json();
+  if (datos.aprobado) {
+    mostrarMensaje("com-mensaje", "Comentario APROBADO: " + datos.razon, false);
+  } else {
+    mostrarMensaje("com-mensaje", "Comentario RECHAZADO: " + (datos.razon || datos.error), true);
+  }
+}
+
+async function verComentarios() {
+  const hiloId = document.getElementById("ver-hilo-id").value;
+  const resp = await fetch(`/hilos/${hiloId}/comentarios`);
+  const comentarios = await resp.json();
+  const contenedor = document.getElementById("lista-comentarios");
+  contenedor.innerHTML = comentarios.map(c =>
+    `<div class="comentario">⭐ ${c.calificacion} - ${c.texto}</div>`
+  ).join("") || "<p>Sin comentarios aprobados todavía.</p>";
+}
+
+cargarHilos();
+</script>
+</body>
+</html>
