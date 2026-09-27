@@ -74,3 +74,23 @@ la falla de seguridad que se pide encontrar o un tropiezo técnico aparte.
   de AWS Academy (habían expirado, error `RequestExpired`) antes de poder
   consultar el security group — recordatorio de que las credenciales
   temporales duran solo 3-4 horas.
+
+## Incidente 5: columna nueva no se creaba automáticamente en RDS
+
+- **Qué pasó:** al agregar el campo `imagen_key` al modelo `Hilo` para
+  soportar subida de imágenes a S3, la creación de un hilo con imagen
+  fallaba con `UndefinedColumn: column "imagen_key" of relation "hilos"
+  does not exist`.
+- **Cómo se diagnosticó:** se revisó el log del contenedor API
+  (`docker compose logs api`), confirmando que el error era de SQL, no de
+  S3 — de hecho la subida a S3 ya había funcionado antes de que fallara el
+  INSERT en la base de datos.
+- **Cómo se resolvió:** `Base.metadata.create_all(engine)` de SQLAlchemy
+  solo crea tablas nuevas, nunca modifica tablas existentes. Como la tabla
+  `hilos` ya existía desde el Día 2, hubo que agregar la columna
+  manualmente con `ALTER TABLE hilos ADD COLUMN IF NOT EXISTS imagen_key
+  VARCHAR(255);` directamente en RDS vía `psql`.
+- **Lección:** cambiar un modelo de SQLAlchemy no migra automáticamente
+  una base de datos que ya tiene datos; en un proyecto real se usaría una
+  herramienta de migraciones (como Alembic) para manejar esto de forma
+  versionada, en vez de un ALTER TABLE manual.

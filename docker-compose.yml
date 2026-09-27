@@ -13,6 +13,8 @@ services:
       - .env
     environment:
       - MODERACION_URL=http://moderacion:5001
+    volumes:
+      - ~/.aws:/home/appuser/.aws:ro
     depends_on:
       - moderacion
     restart: unless-stopped

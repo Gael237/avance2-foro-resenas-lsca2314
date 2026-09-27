@@ -1,7 +1,8 @@
 """API del Foro y Resenas de Productos - Sistema de Catalogo Retail."""
 import os
 import secrets
-
+import io
+import boto3
 import requests
 from flask import Flask, jsonify, request
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -12,6 +13,8 @@ app = Flask(__name__, static_folder="static", static_url_path="")
 
 DATABASE_URL = os.environ.get("DATABASE_URL", "sqlite:///foro.db")
 MODERACION_URL = os.environ.get("MODERACION_URL", "http://moderacion:5001")
+S3_BUCKET = os.environ.get("S3_BUCKET", "avance2-foro-resenas-adjuntos-f2cc794f")
+s3_client = boto3.client("s3", region_name="us-east-1")
 
 engine = create_engine(DATABASE_URL)
 Session = sessionmaker(bind=engine)
@@ -35,6 +38,7 @@ class Hilo(Base):
     producto = Column(String(120), nullable=False)
     titulo = Column(String(200), nullable=False)
     autor_id = Column(Integer, ForeignKey("usuarios.id"), nullable=False)
+    imagen_key = Column(String(255), nullable=True)
     comentarios = relationship("Comentario", backref="hilo")
 
 
@@ -115,26 +119,56 @@ def crear_hilo():
     if not autor_id:
         return jsonify({"error": "no autenticado"}), 401
 
-    datos = request.get_json(silent=True) or {}
-    producto = datos.get("producto", "")
-    titulo = datos.get("titulo", "")
+    # Acepta tanto JSON (sin imagen) como multipart/form-data (con imagen)
+    if request.content_type and "multipart/form-data" in request.content_type:
+        producto = request.form.get("producto", "")
+        titulo = request.form.get("titulo", "")
+        archivo_imagen = request.files.get("imagen")
+    else:
+        datos = request.get_json(silent=True) or {}
+        producto = datos.get("producto", "")
+        titulo = datos.get("titulo", "")
+        archivo_imagen = None
+
     if not producto or not titulo:
         return jsonify({"error": "producto y titulo son requeridos"}), 400
 
+    imagen_key = None
+    if archivo_imagen and archivo_imagen.filename:
+        imagen_key = f"hilos/{producto.replace(' ', '_')}_{secrets.token_hex(6)}_{archivo_imagen.filename}"
+        s3_client.upload_fileobj(archivo_imagen, S3_BUCKET, imagen_key)
+
     sesion = Session()
-    hilo = Hilo(producto=producto, titulo=titulo, autor_id=autor_id)
+    hilo = Hilo(producto=producto, titulo=titulo, autor_id=autor_id, imagen_key=imagen_key)
     sesion.add(hilo)
     sesion.commit()
     hilo_id = hilo.id
     sesion.close()
-    return jsonify({"id": hilo_id, "producto": producto, "titulo": titulo}), 201
+    return jsonify({"id": hilo_id, "producto": producto, "titulo": titulo, "imagen_key": imagen_key}), 201
+
+
+@app.route("/hilos/<int:hilo_id>/imagen", methods=["GET"])
+def obtener_imagen_hilo(hilo_id):
+    sesion = Session()
+    hilo = sesion.query(Hilo).filter_by(id=hilo_id).first()
+    sesion.close()
+    if not hilo or not hilo.imagen_key:
+        return jsonify({"error": "este hilo no tiene imagen"}), 404
+
+    url_firmada = s3_client.generate_presigned_url(
+        "get_object",
+        Params={"Bucket": S3_BUCKET, "Key": hilo.imagen_key},
+        ExpiresIn=300,
+    )
+    return jsonify({"url_temporal": url_firmada})
+
 
 
 @app.route("/hilos", methods=["GET"])
 def listar_hilos():
     sesion = Session()
     hilos = sesion.query(Hilo).all()
-    resultado = [{"id": h.id, "producto": h.producto, "titulo": h.titulo} for h in hilos]
+    resultado = [{"id": h.id, "producto": h.producto, "titulo": h.titulo, "tiene_imagen": h.imagen_key is not None} for h in hilos]
     sesion.close()
     return jsonify(resultado)
 
