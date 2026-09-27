@@ -18,19 +18,19 @@
 #5 transferring context: 288B done
 #5 DONE 0.0s
 
-#6 [moderacion 4/7] RUN pip install --no-cache-dir -r requirements.txt
+#6 [moderacion 6/7] COPY vista_previa_resena.py .
 #6 CACHED
 
 #7 [moderacion 5/7] COPY moderador.py .
 #7 CACHED
 
-#8 [moderacion 6/7] COPY vista_previa_resena.py .
+#8 [moderacion 3/7] COPY requirements.txt .
 #8 CACHED
 
 #9 [moderacion 2/7] WORKDIR /app
 #9 CACHED
 
-#10 [moderacion 3/7] COPY requirements.txt .
+#10 [moderacion 4/7] RUN pip install --no-cache-dir -r requirements.txt
 #10 CACHED
 
 #11 [moderacion 7/7] RUN useradd --create-home --uid 10001 appuser
@@ -63,27 +63,27 @@
 #16 transferring context: 362B done
 #16 DONE 0.0s
 
-#17 [api 5/7] COPY api.py .
+#17 [api 6/7] COPY static/ ./static/
 #17 CACHED
 
-#18 [api 6/7] COPY static/ ./static/
+#9 [api 2/7] WORKDIR /app
+#9 CACHED
+
+#18 [api 3/7] COPY requirements.txt .
 #18 CACHED
 
 #19 [api 4/7] RUN pip install --no-cache-dir -r requirements.txt
 #19 CACHED
 
-#20 [api 3/7] COPY requirements.txt .
+#20 [api 5/7] COPY api.py .
 #20 CACHED
-
-#9 [api 2/7] WORKDIR /app
-#9 CACHED
 
 #21 [api 7/7] RUN useradd --create-home --uid 10001 appuser     && chown -R appuser:appuser /app
 #21 CACHED
 
 #22 [api] exporting to image
 #22 exporting layers done
-#22 writing image sha256:73604a077629460c0c789eac59e33291802206f32132ff10ab45a1c80dad6a01 done
+#22 writing image sha256:3ec881caa697549f10f42b9c2ed5640bbb6dd069fa93c114b766533339a3e502 done
 #22 naming to docker.io/library/avance2-foro-resenas-lsca2314-api done
 #22 DONE 0.0s
 

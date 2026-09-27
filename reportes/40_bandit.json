@@ -1,6 +1,6 @@
 {
   "errors": [],
-  "generated_at": "2026-09-26T19:10:31Z",
+  "generated_at": "2026-09-27T23:48:59Z",
   "metrics": {
     "_totals": {
       "CONFIDENCE.HIGH": 0,
@@ -11,7 +11,7 @@
       "SEVERITY.LOW": 0,
       "SEVERITY.MEDIUM": 2,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 221,
+      "loc": 249,
       "nosec": 0,
       "skipped_tests": 0
     },
@@ -24,7 +24,7 @@
       "SEVERITY.LOW": 0,
       "SEVERITY.MEDIUM": 1,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 151,
+      "loc": 179,
       "nosec": 0,
       "skipped_tests": 0
     },
@@ -57,7 +57,7 @@
   },
   "results": [
     {
-      "code": "196 if __name__ == \"__main__\":\n197     app.run(host=\"0.0.0.0\", port=5000)\n",
+      "code": "230 if __name__ == \"__main__\":\n231     app.run(host=\"0.0.0.0\", port=5000)\n",
       "col_offset": 17,
       "end_col_offset": 26,
       "filename": "app/api/api.py",
@@ -68,9 +68,9 @@
       },
       "issue_severity": "MEDIUM",
       "issue_text": "Possible binding to all interfaces.",
-      "line_number": 197,
+      "line_number": 231,
       "line_range": [
-        197
+        231
       ],
       "more_info": "https://bandit.readthedocs.io/en/1.8.6/plugins/b104_hardcoded_bind_all_interfaces.html",
       "test_id": "B104",
