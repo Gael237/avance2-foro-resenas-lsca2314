@@ -50,6 +50,7 @@ class Comentario(Base):
     texto = Column(Text, nullable=False)
     calificacion = Column(Integer, nullable=False)
     aprobado = Column(Boolean, default=False)
+    imagen_key = Column(String(255), nullable=True)
 
 
 Base.metadata.create_all(engine)
@@ -136,7 +137,10 @@ def crear_hilo():
     imagen_key = None
     if archivo_imagen and archivo_imagen.filename:
         imagen_key = f"hilos/{producto.replace(' ', '_')}_{secrets.token_hex(6)}_{archivo_imagen.filename}"
-        s3_client.upload_fileobj(archivo_imagen, S3_BUCKET, imagen_key)
+        s3_client.upload_fileobj(
+            archivo_imagen, S3_BUCKET, imagen_key,
+            ExtraArgs={"ContentType": archivo_imagen.content_type or "application/octet-stream"},
+        )
 
     sesion = Session()
     hilo = Hilo(producto=producto, titulo=titulo, autor_id=autor_id, imagen_key=imagen_key)
@@ -179,9 +183,15 @@ def crear_comentario(hilo_id):
     if not autor_id:
         return jsonify({"error": "no autenticado"}), 401
 
-    datos = request.get_json(silent=True) or {}
-    texto = datos.get("texto", "")
-    calificacion = datos.get("calificacion", 0)
+    if request.content_type and "multipart/form-data" in request.content_type:
+        texto = request.form.get("texto", "")
+        calificacion = request.form.get("calificacion", 0)
+        archivo_imagen = request.files.get("imagen")
+    else:
+        datos = request.get_json(silent=True) or {}
+        texto = datos.get("texto", "")
+        calificacion = datos.get("calificacion", 0)
+        archivo_imagen = None
 
     try:
         respuesta_moderacion = requests.post(
@@ -193,6 +203,14 @@ def crear_comentario(hilo_id):
 
     aprobado = resultado_moderacion.get("aprobado", False)
 
+    imagen_key = None
+    if archivo_imagen and archivo_imagen.filename:
+        imagen_key = f"comentarios/{secrets.token_hex(6)}_{archivo_imagen.filename}"
+        s3_client.upload_fileobj(
+            archivo_imagen, S3_BUCKET, imagen_key,
+            ExtraArgs={"ContentType": archivo_imagen.content_type or "application/octet-stream"},
+        )
+
     sesion = Session()
     comentario = Comentario(
         hilo_id=hilo_id,
@@ -200,6 +218,7 @@ def crear_comentario(hilo_id):
         texto=texto,
         calificacion=calificacion,
         aprobado=aprobado,
+        imagen_key=imagen_key,
     )
     sesion.add(comentario)
     sesion.commit()
@@ -220,11 +239,26 @@ def listar_comentarios(hilo_id):
         .all()
     )
     resultado = [
-        {"id": c.id, "texto": c.texto, "calificacion": c.calificacion}
+        {"id": c.id, "texto": c.texto, "calificacion": c.calificacion, "tiene_imagen": c.imagen_key is not None}
         for c in comentarios
     ]
     sesion.close()
     return jsonify(resultado)
+
+@app.route("/comentarios/<int:comentario_id>/imagen", methods=["GET"])
+def obtener_imagen_comentario(comentario_id):
+    sesion = Session()
+    comentario = sesion.query(Comentario).filter_by(id=comentario_id).first()
+    sesion.close()
+    if not comentario or not comentario.imagen_key:
+        return jsonify({"error": "este comentario no tiene imagen"}), 404
+
+    url_firmada = s3_client.generate_presigned_url(
+        "get_object",
+        Params={"Bucket": S3_BUCKET, "Key": comentario.imagen_key},
+        ExpiresIn=300,
+    )
+    return jsonify({"url_temporal": url_firmada})
 
 
 if __name__ == "__main__":

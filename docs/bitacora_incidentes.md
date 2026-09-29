@@ -94,3 +94,32 @@ la falla de seguridad que se pide encontrar o un tropiezo técnico aparte.
   una base de datos que ya tiene datos; en un proyecto real se usaría una
   herramienta de migraciones (como Alembic) para manejar esto de forma
   versionada, en vez de un ALTER TABLE manual.
+
+
+## Incidente 6: la imagen del comentario no se veía en el frontend
+
+- **Qué pasó:** después de agregar soporte de imágenes a los comentarios
+  (campo `imagen_key`, endpoint `/comentarios/<id>/imagen`, y el campo
+  `tiene_imagen` en la respuesta de `listar_comentarios`), la interfaz web
+  no mostraba el botón "Ver imagen" para comentarios que sí tenían una
+  imagen adjunta.
+- **Cómo se diagnosticó:** se probó directamente con `curl
+  http://localhost:5000/hilos/9/comentarios` y se confirmó que la
+  respuesta JSON no incluía el campo `tiene_imagen` en absoluto — ni
+  siquiera como `false`. Se verificó dentro del contenedor en ejecución
+  con `docker exec ... grep -A8 "def listar_comentarios" api.py` y se
+  confirmó que el contenedor seguía corriendo la versión anterior de la
+  función, sin el campo nuevo.
+- **Cómo se resolvió:** aunque el archivo en disco (`app/api/api.py`) ya
+  tenía el cambio correcto (confirmado con `grep` fuera del contenedor),
+  un primer intento de `docker compose build --no-cache api` seguido de
+  `up -d` no reflejó el cambio. Se repitió el ciclo completo
+  (`down` → `build --no-cache` de ambos servicios → `up -d`), y esta vez
+  sí se verificó línea por línea dentro del contenedor antes de probar
+  con curl, confirmando que el código nuevo ya estaba presente.
+- **Lección:** cuando un cambio "no aparece" después de reconstruir, no
+  basta con confiar en que el build salió sin errores — conviene verificar
+  explícitamente el contenido real dentro del contenedor en ejecución
+  (`docker exec ... cat/grep archivo`) antes de seguir depurando la lógica
+  de la aplicación, ya que el problema puede estar en el propio ciclo de
+  construcción/despliegue, no en el código.

@@ -17,6 +17,9 @@
   .hilo { border: 1px solid #eee; padding: 10px; margin: 8px 0; border-radius: 4px; }
   .comentario { background: #f9fafb; padding: 8px; margin: 6px 0; border-radius: 4px; font-size: 14px; }
   #estado-sesion { font-weight: bold; margin-bottom: 20px; }
+  #modal-imagen { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:1000; align-items:center; justify-content:center; }
+  #modal-imagen img { max-width:90%; max-height:90%; border-radius:8px; }
+  #modal-imagen .cerrar { position:absolute; top:20px; right:30px; color:white; font-size:30px; cursor:pointer; }
 </style>
 </head>
 <body>
@@ -44,6 +47,7 @@
   <h2>3. Crear un hilo sobre un producto</h2>
   <input id="hilo-producto" placeholder="Nombre del producto">
   <input id="hilo-titulo" placeholder="Título del hilo">
+  <input id="hilo-imagen" type="file" accept="image/*">
   <button onclick="crearHilo()">Crear hilo</button>
   <div id="hilo-mensaje" class="mensaje"></div>
 </section>
@@ -59,6 +63,7 @@
   <input id="com-hilo-id" placeholder="ID del hilo" type="number">
   <textarea id="com-texto" placeholder="Escribe tu comentario"></textarea>
   <input id="com-calificacion" placeholder="Calificación (1-5)" type="number" min="1" max="5">
+  <input id="com-imagen" type="file" accept="image/*">
   <button onclick="publicarComentario()">Publicar</button>
   <div id="com-mensaje" class="mensaje"></div>
 </section>
@@ -69,6 +74,11 @@
   <button onclick="verComentarios()">Ver comentarios</button>
   <div id="lista-comentarios"></div>
 </section>
+
+<div id="modal-imagen" onclick="cerrarModal()">
+  <span class="cerrar">&times;</span>
+  <img id="modal-imagen-contenido" src="">
+</div>
 
 <script>
 let TOKEN = null;
@@ -113,13 +123,22 @@ async function crearHilo() {
   if (!TOKEN) { mostrarMensaje("hilo-mensaje", "Primero inicia sesión", true); return; }
   const producto = document.getElementById("hilo-producto").value;
   const titulo = document.getElementById("hilo-titulo").value;
+  const archivoImagen = document.getElementById("hilo-imagen").files[0];
+
+  const datosFormulario = new FormData();
+  datosFormulario.append("producto", producto);
+  datosFormulario.append("titulo", titulo);
+  if (archivoImagen) {
+    datosFormulario.append("imagen", archivoImagen);
+  }
+
   const resp = await fetch("/hilos", {
     method: "POST",
-    headers: {"Content-Type": "application/json", "Authorization": "Bearer " + TOKEN},
-    body: JSON.stringify({producto, titulo})
+    headers: {"Authorization": "Bearer " + TOKEN},
+    body: datosFormulario
   });
   const datos = await resp.json();
-  mostrarMensaje("hilo-mensaje", resp.ok ? "Hilo creado con ID " + datos.id : (datos.error || "Error"), !resp.ok);
+  mostrarMensaje("hilo-mensaje", resp.ok ? "Hilo creado con ID " + datos.id + (datos.imagen_key ? " (con imagen)" : "") : (datos.error || "Error"), !resp.ok);
   if (resp.ok) cargarHilos();
 }
 
@@ -128,19 +147,55 @@ async function cargarHilos() {
   const hilos = await resp.json();
   const contenedor = document.getElementById("lista-hilos");
   contenedor.innerHTML = hilos.map(h =>
-    `<div class="hilo"><b>#${h.id}</b> - ${h.producto}: ${h.titulo}</div>`
+    `<div class="hilo"><b>#${h.id}</b> - ${h.producto}: ${h.titulo}
+     ${h.tiene_imagen ? ` <button onclick="verImagen(${h.id})">Ver imagen</button>` : ""}
+     </div>`
   ).join("") || "<p>No hay hilos todavía.</p>";
+}
+
+async function verImagen(hiloId) {
+  const resp = await fetch(`/hilos/${hiloId}/imagen`);
+  const datos = await resp.json();
+  mostrarImagenEnModal(datos);
+}
+
+async function verImagenComentario(comentarioId) {
+  const resp = await fetch(`/comentarios/${comentarioId}/imagen`);
+  const datos = await resp.json();
+  mostrarImagenEnModal(datos);
+}
+
+function mostrarImagenEnModal(datos) {
+  if (datos.url_temporal) {
+    document.getElementById("modal-imagen-contenido").src = datos.url_temporal;
+    document.getElementById("modal-imagen").style.display = "flex";
+  } else {
+    alert(datos.error || "No se pudo obtener la imagen");
+  }
+}
+
+function cerrarModal() {
+  document.getElementById("modal-imagen").style.display = "none";
 }
 
 async function publicarComentario() {
   if (!TOKEN) { mostrarMensaje("com-mensaje", "Primero inicia sesión", true); return; }
   const hiloId = document.getElementById("com-hilo-id").value;
   const texto = document.getElementById("com-texto").value;
-  const calificacion = parseInt(document.getElementById("com-calificacion").value) || 0;
+  const calificacion = document.getElementById("com-calificacion").value;
+  const archivoImagen = document.getElementById("com-imagen").files[0];
+
+  const datosFormulario = new FormData();
+  datosFormulario.append("texto", texto);
+  datosFormulario.append("calificacion", calificacion);
+  if (archivoImagen) {
+    datosFormulario.append("imagen", archivoImagen);
+  }
+
   const resp = await fetch(`/hilos/${hiloId}/comentarios`, {
     method: "POST",
-    headers: {"Content-Type": "application/json", "Authorization": "Bearer " + TOKEN},
-    body: JSON.stringify({texto, calificacion})
+    headers: {"Authorization": "Bearer " + TOKEN},
+    body: datosFormulario
   });
   const datos = await resp.json();
   if (datos.aprobado) {
@@ -156,7 +211,9 @@ async function verComentarios() {
   const comentarios = await resp.json();
   const contenedor = document.getElementById("lista-comentarios");
   contenedor.innerHTML = comentarios.map(c =>
-    `<div class="comentario">⭐ ${c.calificacion} - ${c.texto}</div>`
+    `<div class="comentario">⭐ ${c.calificacion} - ${c.texto}
+     ${c.tiene_imagen ? ` <button onclick="verImagenComentario(${c.id})">Ver imagen</button>` : ""}
+     </div>`
   ).join("") || "<p>Sin comentarios aprobados todavía.</p>";
 }
 
